@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Comment Section</title>
+</head>
+<body>
+
+<div id="commentsContainer">
+    <!-- Comments will be dynamically added here -->
+</div>
+
+<button id="showMoreBtn">Show More</button>
+
+<script>
+document.addEventListener("DOMContentLoaded", function() {
+    const commentsContainer = document.getElementById('commentsContainer');
+    const showMoreBtn = document.getElementById('showMoreBtn');
+    let comments = [];
+    let currentIndex = 0;
+
+    // Function to render comments
+    function renderComments(startIndex, count) {
+        for (let i = startIndex; i < Math.min(startIndex + count, comments.length); i++) {
+            const commentDiv = document.createElement('div');
+            commentDiv.textContent = comments[i];
+            commentsContainer.appendChild(commentDiv);
+        }
+    }
+
+    // Simulated comments data
+    comments = ["Comment 1", "Comment 2", "Comment 3", "Comment 4", "Comment 5"]; // Add more comments as needed
+
+    // Initial render
+    renderComments(currentIndex, 2);
+    currentIndex += 2;
+
+    // Function to show more comments
+    function showMoreComments() {
+        renderComments(currentIndex, 3);
+        currentIndex += 2;
+        // Hide 'Show More' button if all comments are shown
+        if (currentIndex >= comments.length) {
+            showMoreBtn.style.display = 'none';
+        }
+    }
+
+    // Event listener for 'Show More' button
+    showMoreBtn.addEventListener('click', showMoreComments);
+});
+</script>
+
+</body>
+</html>
