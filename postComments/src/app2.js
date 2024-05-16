@@ -12,27 +12,8 @@ Promise.all([fetchPosts, fetchPostComments])
         // Count the total comments for each posts
         let filter = comments.reduce(
             function (acc, curr) {
-                //         // if (!acc.includes(curr.postId)) {
-                //         //     acc.push(curr.postId)
-                //         // }
-                //         // return acc;
-
-                //         if (!acc.includes(curr.postId)) {
-                //             // let totalComments = {
-                //             //     postId: curr.postId,
-                //             //     comments: 1,
-                //             // };
-
-                // console.log(acc[curr.postId]);
-                // if (acc[curr.postId] === 'undefined'){
-                //     acc[curr.postId] = 0;
-                // }
-                // else{
-                //     acc[curr.postId]++;
-                // }
                 acc[curr.postId] = (acc[curr.postId] || 0) + 1;
                 return acc;
-                //         }
             },
             {}
         );
@@ -85,11 +66,11 @@ Promise.all([fetchPosts, fetchPostComments])
 
             let showMoreComments = document.createElement("button");
             showMoreComments.innerHTML = `Show ${filter[item.id] - displayCount} more comments`;
-            showMoreComments.onclick = () => loadComments(filter[item.id], item.id);
+            showMoreComments.onclick = () => loadComments(filter[item.id]);
 
             post.appendChild(showMoreComments);
 
-            function loadComments(externalCount, postId) {
+            function loadComments(externalCount) {
                 // Load comments
                 count = 0
                 document.getElementById(`post-${item.id}-comments`).innerHTML = "";
@@ -97,37 +78,48 @@ Promise.all([fetchPosts, fetchPostComments])
                     // console.log(comment.postId, item.id);
 
                     if (comment.postId === item.id && count < externalCount) {
-                        console.log("Hi there");
-                        console.log(comment);
+                        // console.log("Hi there");
+                        // console.log(comment);
                         count++;
-                        let commentSection = document.getElementById(`post-${comment.postId}-comments`);
+                        
+                        displayComments(comment.postId, comment.body, comment.email)
 
-                        let commentContainer = document.createElement("div");
-                        commentContainer.classList.add(
-                            "p-4",
-                            "text-xs",
-                            "border",
-                            "bg-slate-50",
-                            "rounded"
-                        )
-
-                        let commentContent = document.createElement("p");
-                        commentContent.innerHTML = comment.body;
-
-                        let commentUser = document.createElement("p");
-                        commentUser.innerHTML = comment.email;
-                        commentUser.classList.add(
-                            "font-bold",
-                            "mt-3"
-                        )
-
-                        commentContainer.appendChild(commentContent);
-                        commentContainer.appendChild(commentUser);
-                        commentSection.appendChild(commentContainer);
+                        // hide the show more comments button after being clicked
+                        console.log(externalCount);
+                        if(externalCount >= filter[item.id]){
+                            showMoreComments.style.display = "none";
+                        }
                     }
                     // console.log("Total: ", count)
                     //     
                 });
+            }
+
+            function displayComments(commentPostId, commentBody, commentEmail) {
+                let commentSection = document.getElementById(`post-${commentPostId}-comments`);
+
+                let commentContainer = document.createElement("div");
+                commentContainer.classList.add(
+                    "p-4",
+                    "text-xs",
+                    "border",
+                    "bg-slate-50",
+                    "rounded"
+                )
+
+                let commentContent = document.createElement("p");
+                commentContent.innerHTML = commentBody;
+
+                let commentUser = document.createElement("p");
+                commentUser.innerHTML = commentEmail;
+                commentUser.classList.add(
+                    "font-bold",
+                    "mt-3"
+                )
+
+                commentContainer.appendChild(commentContent);
+                commentContainer.appendChild(commentUser);
+                commentSection.appendChild(commentContainer);
             }
             loadComments(displayCount);
 
